@@ -46,4 +46,11 @@ public class TaskController {
 
         return new ResponseEntity(savedTask, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public HttpStatus deleteTask(@PathVariable("id") String id) {
+        Boolean result = taskService.deleteTaskById(id);
+
+        return result ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+    }
 }

@@ -94,4 +94,29 @@ public class TaskService {
 
         return savedTask;
     }
+
+    public Boolean deleteTaskById(String taskId) {
+        Task taskById = this.findTaskById(taskId);
+        if (taskById == null) {
+            return false;
+        }
+
+        Project project = this.findProjectById(taskById.getProjectId());
+
+        if (project == null || project.getTaskList() == null) {
+            return false;
+        }
+
+        List<Task> taskList = project.getTaskList();
+        List<Task> newTaskList = taskList
+                .stream()
+                .filter(t -> !t.getId().equals(taskId))
+                .collect(Collectors.toList());
+        project.setTaskList(newTaskList);
+        projectRepository.save(project);
+
+        taskRepository.deleteById(taskId);
+
+        return true;
+    }
 }
